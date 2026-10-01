@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gesture Battle - Game pertarungan refleks gesture yang seru! Jawab gerakan musuh dengan cepat dan tepat!">
+    <title>⚔️ Gesture Battle - Menjawab Gerak!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Particle Background -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- ===== MENU SCREEN ===== -->
+    <div id="menuScreen" class="screen active">
+        <div class="menu-container">
+            <div class="title-glow">
+                <h1 class="game-title">
+                    <span class="title-icon">⚔️</span>
+                    <span class="title-text">GESTURE</span>
+                    <span class="title-text accent">BATTLE</span>
+                </h1>
+                <p class="subtitle">Menjawab Gerak — Uji Refleksmu!</p>
+            </div>
+            <div class="menu-buttons">
+                <button id="btnStart" class="btn btn-primary">
+                    <span class="btn-icon">🎮</span> MULAI BATTLE
+                </button>
+                <button id="btnHowTo" class="btn btn-secondary">
+                    <span class="btn-icon">📖</span> CARA MAIN
+                </button>
+            </div>
+            <div class="menu-stats">
+                <div class="stat-card">
+                    <span class="stat-label">High Score</span>
+                    <span class="stat-value" id="menuHighScore">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Best Combo</span>
+                    <span class="stat-value" id="menuBestCombo">0x</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== HOW TO PLAY SCREEN ===== -->
+    <div id="howToScreen" class="screen">
+        <div class="howto-container">
+            <h2 class="section-title">📖 Cara Main</h2>
+            <div class="howto-grid">
+                <div class="howto-card">
+                    <div class="gesture-pair">
+                        <span class="enemy-gesture">👊</span>
+                        <span class="arrow">→</span>
+                        <span class="player-gesture">🛡️</span>
+                    </div>
+                    <p><strong>Punch</strong> → tekan <kbd>🛡️ Block</kbd></p>
+                </div>
+                <div class="howto-card">
+                    <div class="gesture-pair">
+                        <span class="enemy-gesture">🦶</span>
+                        <span class="arrow">→</span>
+                        <span class="player-gesture">⬆️</span>
+                    </div>
+                    <p><strong>Kick</strong> → tekan <kbd>⬆️ Jump</kbd></p>
+                </div>
+                <div class="howto-card">
+                    <div class="gesture-pair">
+                        <span class="enemy-gesture">🤜</span>
+                        <span class="arrow">→</span>
+                        <span class="player-gesture">⬇️</span>
+                    </div>
+                    <p><strong>Upper</strong> → tekan <kbd>⬇️ Duck</kbd></p>
+                </div>
+                <div class="howto-card">
+                    <div class="gesture-pair">
+                        <span class="enemy-gesture">⚡</span>
+                        <span class="arrow">→</span>
+                        <span class="player-gesture">💨</span>
+                    </div>
+                    <p><strong>Special</strong> → tekan <kbd>💨 Dodge</kbd></p>
+                </div>
+            </div>
+            <div class="howto-keys">
+                <h3>⌨️ Keyboard Shortcut</h3>
+                <div class="key-map">
+                    <span><kbd>A</kbd> / <kbd>←</kbd> = 🛡️ Block</span>
+                    <span><kbd>W</kbd> / <kbd>↑</kbd> = ⬆️ Jump</span>
+                    <span><kbd>S</kbd> / <kbd>↓</kbd> = ⬇️ Duck</span>
+                    <span><kbd>D</kbd> / <kbd>→</kbd> = 💨 Dodge</span>
+                </div>
+            </div>
+            <button id="btnBackMenu" class="btn btn-secondary">
+                <span class="btn-icon">◀</span> KEMBALI
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== GAME SCREEN ===== -->
+    <div id="gameScreen" class="screen">
+        <!-- Top HUD -->
+        <div class="game-hud">
+            <div class="hud-left">
+                <div class="player-info">
+                    <span class="player-name">🥷 KAMU</span>
+                    <div class="health-bar-container">
+                        <div class="health-bar player-health" id="playerHealth">
+                            <div class="health-fill"></div>
+                        </div>
+                        <span class="health-text" id="playerHealthText">100</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hud-center">
+                <div class="round-info">
+                    <span class="round-label">ROUND</span>
+                    <span class="round-number" id="roundNumber">1</span>
+                </div>
+                <div class="score-display">
+                    <span class="score-label">SCORE</span>
+                    <span class="score-value" id="scoreValue">0</span>
+                </div>
+                <div class="combo-display" id="comboDisplay">
+                    <span class="combo-value" id="comboValue">0</span>
+                    <span class="combo-label">COMBO</span>
+                </div>
+            </div>
+            <div class="hud-right">
+                <div class="enemy-info">
+                    <span class="enemy-name">👹 MUSUH</span>
+                    <div class="health-bar-container">
+                        <div class="health-bar enemy-health" id="enemyHealth">
+                            <div class="health-fill"></div>
+                        </div>
+                        <span class="health-text" id="enemyHealthText">100</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Battle Arena -->
+        <div class="battle-arena" id="battleArena">
+            <!-- Player Character -->
+            <div class="fighter player-fighter" id="playerFighter">
+                <div class="fighter-body">
+                    <div class="fighter-emoji">🥷</div>
+                </div>
+                <div class="fighter-shadow"></div>
+            </div>
+
+            <!-- Center Battle Zone -->
+            <div class="battle-zone" id="battleZone">
+                <div class="gesture-prompt" id="gesturePrompt">
+                    <div class="prompt-label">MUSUH MENYERANG!</div>
+                    <div class="gesture-icon" id="gestureIcon">👊</div>
+                    <div class="gesture-name" id="gestureName">PUNCH</div>
+                    <div class="timer-ring" id="timerRing">
+                        <svg viewBox="0 0 120 120">
+                            <circle class="timer-bg" cx="60" cy="60" r="54"/>
+                            <circle class="timer-progress" id="timerProgress" cx="60" cy="60" r="54"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="battle-result" id="battleResult">
+                    <span class="result-icon" id="resultIcon">✅</span>
+                    <span class="result-text" id="resultText">PERFECT!</span>
+                </div>
+                <div class="countdown-display" id="countdownDisplay">
+                    <span class="countdown-number" id="countdownNumber">3</span>
+                </div>
+            </div>
+
+            <!-- Enemy Character -->
+            <div class="fighter enemy-fighter" id="enemyFighter">
+                <div class="fighter-body">
+                    <div class="fighter-emoji">👹</div>
+                </div>
+                <div class="fighter-shadow"></div>
+            </div>
+        </div>
+
+        <!-- Response Buttons -->
+        <div class="response-buttons" id="responseButtons">
+            <button class="response-btn" id="btnBlock" data-response="block">
+                <span class="resp-icon">🛡️</span>
+                <span class="resp-name">BLOCK</span>
+                <span class="resp-key">A / ←</span>
+            </button>
+            <button class="response-btn" id="btnJump" data-response="jump">
+                <span class="resp-icon">⬆️</span>
+                <span class="resp-name">JUMP</span>
+                <span class="resp-key">W / ↑</span>
+            </button>
+            <button class="response-btn" id="btnDuck" data-response="duck">
+                <span class="resp-icon">⬇️</span>
+                <span class="resp-name">DUCK</span>
+                <span class="resp-key">S / ↓</span>
+            </button>
+            <button class="response-btn" id="btnDodge" data-response="dodge">
+                <span class="resp-icon">💨</span>
+                <span class="resp-name">DODGE</span>
+                <span class="resp-key">D / →</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== ROUND TRANSITION ===== -->
+    <div id="roundTransition" class="screen">
+        <div class="transition-content">
+            <div class="transition-round" id="transitionRound">ROUND 2</div>
+            <div class="transition-subtitle">BERSIAPLAH!</div>
+        </div>
+    </div>
+
+    <!-- ===== GAME OVER SCREEN ===== -->
+    <div id="gameOverScreen" class="screen">
+        <div class="gameover-container">
+            <div class="gameover-result" id="gameoverResult">
+                <h2 class="gameover-title" id="gameoverTitle">🏆 KEMENANGAN!</h2>
+                <p class="gameover-subtitle" id="gameoverSubtitle">Kamu mengalahkan musuh!</p>
+            </div>
+            <div class="gameover-stats">
+                <div class="go-stat">
+                    <span class="go-stat-label">Score</span>
+                    <span class="go-stat-value" id="goScore">0</span>
+                </div>
+                <div class="go-stat">
+                    <span class="go-stat-label">Max Combo</span>
+                    <span class="go-stat-value" id="goCombo">0x</span>
+                </div>
+                <div class="go-stat">
+                    <span class="go-stat-label">Akurasi</span>
+                    <span class="go-stat-value" id="goAccuracy">0%</span>
+                </div>
+                <div class="go-stat">
+                    <span class="go-stat-label">Round</span>
+                    <span class="go-stat-value" id="goRound">1</span>
+                </div>
+            </div>
+            <div class="gameover-buttons">
+                <button id="btnRestart" class="btn btn-primary">
+                    <span class="btn-icon">🔄</span> MAIN LAGI
+                </button>
+                <button id="btnToMenu" class="btn btn-secondary">
+                    <span class="btn-icon">🏠</span> MENU
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen Shake / Flash overlay -->
+    <div class="screen-flash" id="screenFlash"></div>
+
+    <script src="game.js"></script>
+</body>
+</html>
